@@ -1,0 +1,22 @@
+.announcement {
+    height: 1.5rem;
+    position: absolute;
+    font-size: 12px;
+    color: white;
+    width: 100%;
+    top:-1rem;
+    z-index: 999;
+    text-align: center;
+    button {
+        float:right;
+    }
+    &.alert {
+        background-color: red;
+    }
+    &.warning {
+        background-color: orangered;
+    }
+    &.info {
+        background-color: lightskyblue;
+    }
+}

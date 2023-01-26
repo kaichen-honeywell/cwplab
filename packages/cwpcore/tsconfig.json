@@ -1,0 +1,17 @@
+{
+  "extends":"../../tsconfig.base.json",
+  "include": ["src", "../cwpinterface/src"],
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": false,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "paths": {
+      "@cwp/interface": ["../cwpinterface/src"]
+    }
+
+  }
+}

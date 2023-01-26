@@ -1,0 +1,16 @@
+.App-header {
+    height: 3rem;
+    width: 100%;
+    .App-logo {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    &.red {
+        background-color: red;
+    }
+
+    &.yellow {
+        background-color: yellow;
+    }
+}

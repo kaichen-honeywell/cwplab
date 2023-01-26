@@ -1,0 +1,43 @@
+{
+  "name": "@cwp/interface",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "private": true,
+  "dependencies": {},
+  "publishConfig": {
+    "registry": "https://artifactory-na.honeywell.com/artifactory/api/npm/qasp-npm-stable-local"
+  },
+  "scripts": {
+    "watch": "yarn link && yarn build:debug --watch",
+    "test": "jest --coverage",
+    "test:debug-limit": "DEBUG_PRINT_LIMIT=100 jest --coverage",
+    "build": "rollup --config rollup.config.js ",
+    "build:debug": "rollup --config rollup.config.js --environment MODE:debug",
+    "lint": "eslint src --fix --ext .ts,.tsx",
+    "prettify": "prettier --write src",
+    "clean": "rm -rf ./dist",
+    "yalcpublish": "yalc push"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/eslint-parser": "^7.19.1",
+    "@babel/eslint-plugin": "^7.19.1",
+    "@rollup/plugin-json": "^5.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "eslint": "^8.32.0",
+    "jest": "^29.4.0",
+    "prettier": "^2.8.3",
+    "rollup": "^2.79.1",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "standard": "^17.0.0",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  }
+}

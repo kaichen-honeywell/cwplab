@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "sourceMap": true,
+      "strict": true,
+      "jsx": "react",
+      "composite": true,
+      "module": "esnext",
+      "resolveJsonModule": true,
+      "isolatedModules": true,  
+      "rootDir": "./packages",
+      "moduleResolution": "node",
+      "baseUrl": ".",
+      "paths": {
+        "@cwp/interface": [
+          "packages/cwpinterface"
+        ],
+        "@cwp/core": [
+          "packages/cwpcore"
+        ],
+        "cwp/ui": [
+          "packages/cwpui"
+        ]
+      }
+    },
+  }

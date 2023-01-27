@@ -99,7 +99,8 @@ export class  UIHelper implements CwpUIService {
         if(this._loaders[loadConfig.triggerId]){
             return;
         }
-        const ctx =  CWP.getInstance() as CwpContext;      
+        const ctx =  CWP.getInstance() as CwpContext;    
+        loadConfig.open = true;  
         ctx.events.publishEvent({
             subjectName: CWP_LOADER_SUBJECT,
             details: {

@@ -59,7 +59,7 @@ export class EventBus implements CwpEventService {
 
     public publishEvent(evt: CwpEventDetail, callback?:()=>void){
       if(evt.subjectName &&  this.events[evt.subjectName]){
-        console.log(`will notify ${evt.subjectName} to ${this.events[evt.subjectName].listObservers().length} subscibers`);
+        console.log(`eventbus will notify ${evt.subjectName} to ${this.events[evt.subjectName].listObservers().length} subscibers`);
           this.events[evt.subjectName].notify(evt);
           this.events[evt.subjectName].notifyAsync(evt).then(callback)
       }   

@@ -39,7 +39,7 @@ export interface LoaderConfig {
   customText?: string;
   showPercentage?: boolean;
   percentageValue?: string;
-  source: string;
+  source?: string;
   triggerId: string;
   open: boolean;
 }

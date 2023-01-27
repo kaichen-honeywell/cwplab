@@ -37,6 +37,7 @@ const Nav = (props: NavProps)=> {
             app: item.appId,
            }
         } )
+        toggle();
     }
 
     const navObserver = {observerName: 'cwp_nav', updateObserver: (sub, data:CwpEventDetail)=> {

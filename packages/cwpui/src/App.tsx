@@ -38,7 +38,7 @@ class App extends React.Component {
       <Nav items={this.state.navItems} ></Nav>
       <Main></Main>
       <ModalService></ModalService>
-   
+      <LoaderService></LoaderService>
     </div>)
   ;
 }

@@ -4,12 +4,11 @@ const APP_CATALOG_SERVICE_URL ='http://localhost:3000/appcatalog';
 
 export class AppCatalog implements CwpAppService {
     private localApps: Record<string, IAppData>;
-
     constructor() {
         this.localApps = {};
     }
     public openApp(appId: string, user: IPortalUser): Promise<IAppData> {
-        return Promise.resolve({} as IAppData);
+        return new Promise((resolve) => setTimeout(resolve, 3000));        
     }
     public closeApp(appId: string, user: IPortalUser):Promise<IAppData> {
         return Promise.resolve({} as IAppData);

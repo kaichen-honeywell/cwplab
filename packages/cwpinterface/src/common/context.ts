@@ -11,3 +11,14 @@ export interface CwpContext {
   user: CwpUserService;
   i18n: CwpTranslateService;
 }
+declare global {
+  interface Window { CWP: CwpContext; }
+}
+
+export const GetSafeCwpContext = ()=> {
+  if(window.CWP){
+    return window.CWP as CwpContext;
+  } else {
+    throw new Error('CWP context is not initiliazed!')
+  }
+}

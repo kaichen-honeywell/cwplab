@@ -35,7 +35,7 @@ export interface ModalObject {
   config: ModalConfig;
 }
 export interface LoaderConfig {
-  size: UISize;
+  size?: UISize;
   customText?: string;
   showPercentage?: boolean;
   percentageValue?: string;

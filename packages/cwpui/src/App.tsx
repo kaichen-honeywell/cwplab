@@ -36,7 +36,7 @@ class App extends React.Component {
       <AnnouncementService></AnnouncementService>
       <Header logo={logo}></Header>
       <Nav items={this.state.navItems} ></Nav>
-      <Main></Main>
+      <Main allItems= {this.state.navItems}  user={this.state.user}></Main>
       <ModalService></ModalService>
       <LoaderService></LoaderService>
     </div>)

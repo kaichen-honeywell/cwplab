@@ -1,7 +1,7 @@
 import { IObserver } from "../../../cwpinterface/src/events/IObserver";
 import { ISubject } from "../../../cwpinterface/src/events/ISubject";
-import { CwpEventService, CwpEventDetail } from "../../../cwpinterface/src/index";
-import { AppChangeSubject, APP_NAV_CHANGE_SUBJECT } from "./appchange";
+import { CwpEventService, CwpEventDetail, APP_NAV_CHANGE_SUBJECT } from "../../../cwpinterface/src/index";
+import { AppChangeSubject } from "./appchange";
 import { BaseSubject } from "./basesubject";
 import { CWP_NAV_BUTTON_SUBJECT, NavButtonSubject } from "./navbutton";
 

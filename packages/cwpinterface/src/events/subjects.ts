@@ -38,3 +38,6 @@ export interface CwpChange extends CwpEventDetail{
   oldvalue: string[];
   newvalue: string[];
 }
+
+export const APP_NAV_CHANGE_SUBJECT  = 'CWP_APP_NAV_CHANGE_EVENT';
+

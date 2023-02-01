@@ -51,35 +51,17 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: "@cwp/ui",
-      remotes: {
-        "@hce/siteop": `promise new Promise(resolve => {
-          const remoteUrlWithVersion = 'http://localhost:5003/remoteEntry.js'
-          const script = document.createElement('script')
-          script.src = remoteUrlWithVersion
-          script.onload = () => {
-            // the injected script has loaded and is available on window
-            // we can now resolve this Promise
-            const proxy = {
-              get: (request) => window._hce_siteop.get(request),
-              init: (arg) => {
-                try {
-                  return window._hce_siteop.init(arg)
-                } catch(e) {
-                  console.log('remote container already initialized')
-                }
-              }
-            }
-            resolve(proxy)
-          }
-          // inject this script with the src set to the versioned remoteEntry.js
-          document.head.appendChild(script);
-        })
-        `
+      name: "@hce/siteop",
+      filename: 'remoteEntry.js',
+      exposes: {
+        './Panda': './src/components/Panda',
+        './Picking': './src/components/Picking',
+        './Outbound': './src/components/Outbound',
+        './Shipping': './src/components/Shipping'
       },
       library: {
         type: 'global',
-        name: '_cwp_ui'
+        name: '_hce_siteop'
       },
       shared: {react: {singleton: true, eager: true, requiredVersion: "^18.2.0"}, "react-dom": {singleton: true, eager: true, requiredVersion: "^18.2.0"}},
     }),

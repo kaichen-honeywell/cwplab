@@ -1,0 +1,15 @@
+.panda-container{
+    width: 50%;
+    margin: auto;
+    
+}
+.panda-button {
+    &.green {
+        background: green;
+        color: yellow;
+    }
+    &.black {
+        background: black;
+        color:white;
+    }
+}

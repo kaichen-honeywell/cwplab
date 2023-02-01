@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { APP_NAV_CHANGE_SUBJECT, CWP, CWP_NAV_BUTTON_SUBJECT } from "../../../cwpcore/src";
-import { CwpContext, CwpEventDetail, IAppData, IAppRoute } from "../../../cwpinterface/src";
+import { CWP, CWP_NAV_BUTTON_SUBJECT } from "../../../cwpcore/src";
+import { APP_NAV_CHANGE_SUBJECT, CwpContext, CwpEventDetail, IAppData, IAppRoute } from "../../../cwpinterface/src";
 import { IObserver } from "../../../cwpinterface/src/events/IObserver";
 import { hamburgerButtonSubject } from "../SubjectConstant";
 import "./Nav.scss";
@@ -34,7 +34,8 @@ const Nav = (props: NavProps)=> {
             elementId: 'nav_toggle_button',
             source: 'cwp_nav',
             route: route.rootUrl,
-            app: item.appId,
+            component: route.component,
+            appId: item.appId,
            }
         } )
         toggle();

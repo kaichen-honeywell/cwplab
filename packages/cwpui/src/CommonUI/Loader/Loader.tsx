@@ -4,7 +4,7 @@ import { CwpContext, CwpEventDetail, CWP_LOADER_SUBJECT, LoaderConfig, UISize } 
 import { CWP } from "../../../../cwpcore/src";
 import { IObserver } from "../../../../cwpinterface/src/events/IObserver";
 export const LoaderService = (props) => {
-    const[loader, setLoader] = useState({size: UISize.medium, triggerId: '', open: false})
+    const[loader, setLoader] = useState({size: UISize.medium, triggerId: '', open: false, text: '', per: '100%'})
     const ctx = CWP.getInstance() as CwpContext;
 
     const observer = {
@@ -14,6 +14,8 @@ export const LoaderService = (props) => {
             setLoader({
                 size: config.size,
                 open: config.open,
+                text: config.customText,
+                per: config.showPercentage? config.percentageValue: '',
                 triggerId: 'cwp_loader'
             });
         }
@@ -28,7 +30,8 @@ export const LoaderService = (props) => {
     if(loader.open){
         return (
         <div className="loader-container">
-            <div className="loader"></div>
+            <div className="loader">{loader.text}</div>
+            <span>{loader.per}</span>
         </div>
         )
     } else {

@@ -4,11 +4,22 @@ const APP_CATALOG_SERVICE_URL ='http://localhost:3000/appcatalog';
 
 export class AppCatalog implements CwpAppService {
     private localApps: Record<string, IAppData>;
+    private currentAppId: string;
     constructor() {
         this.localApps = {};
+        this.currentAppId = '';
     }
-    public openApp(appId: string, user: IPortalUser): Promise<IAppData> {
-        return new Promise((resolve) => setTimeout(resolve, 3000));        
+    public async openApp(appId: string, user: IPortalUser): Promise<IAppData> {
+        if(!appId){
+            throw new Error('invalid appId');
+        }
+        if(this.currentAppId===appId){
+            return Promise.resolve(this.currentApp());
+        } else {
+            this.currentAppId= appId;
+            await this.getApp(appId,user);
+        return new Promise((resolve) => setTimeout(resolve, 2000));        
+        }
     }
     public closeApp(appId: string, user: IPortalUser):Promise<IAppData> {
         return Promise.resolve({} as IAppData);
@@ -19,25 +30,37 @@ export class AppCatalog implements CwpAppService {
     }
 
     public async getApp(appId: string, user: IPortalUser):Promise<IAppData> {
-        const response = await fetch(`${APP_CATALOG_SERVICE_URL}`,{
+        const localapp = this.localApps[appId];
+        if(localapp){
+            return Promise.resolve(localapp);
+        }
+        const response = await fetch(`${APP_CATALOG_SERVICE_URL}/${appId}`,{
             method:'GET',
             mode:'cors',
             headers: {
+                'Authorization': `Bearer ${user.accessToken}`, 
                 'Content-Type': 'application/json'
             }
         });
         const json =await response.json();
-        const result = JSON.parse(json) as IAppData;
+        const result =json as IAppData;
 
-        if(!this.localApps[appId]){
-          this.localApps[appId]= result;
-        }
+        this.localApps[appId]= result;
+        this.currentAppId = appId;
 
         return Promise.resolve(result);
     } 
 
-    public currentApp():IAppData {
-        return {} as IAppData;
+    public currentApp():IAppData  {
+        if (!this.currentAppId){
+            return {} as IAppData;
+        }
+        const app = this.localApps[this.currentAppId];
+        if (app) {
+            return app; 
+        } else {
+            throw new Error('current app not exist');
+        }
     }
 
     public async upgradeApp(appId: string, user: IPortalUser): Promise<IAppData> {

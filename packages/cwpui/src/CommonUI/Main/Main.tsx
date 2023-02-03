@@ -1,20 +1,20 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { CWP } from '../../../../cwpcore/src';
 import { APP_NAV_CHANGE_SUBJECT, CwpContext, CwpEventDetail, IAppData, UISize } from '../../../../cwpinterface/src';
 import { IObserver } from '../../../../cwpinterface/src/events/IObserver';
+import { Blank } from './Blank';
 // import { BrowserRouter, useNavigate, Routes, Route } from "react-router-dom";
 import "./Main.scss";
-import { RouteBuilder } from './RouteBuilder';
-
 
 
 const comp1 = React.lazy(() =>import('@hce/siteop/Panda') );
 const comp2 = React.lazy(() =>import('@hce/siteop/Picking') );
 const comp3 = React.lazy(() =>import('@hce/siteop/Shipping') );
+           
+let components ={'Panda': comp1, 'Picking': comp2, 'Shipping': comp3};
 
-const comps = {"Panda": comp1, "Shipping": comp3, "Picking": comp2};
-                  
-let RemoteComponent = comps.Panda;
+
+let RemoteComponent  = Blank;
 
 export const Main = (props) => {
 
@@ -24,6 +24,7 @@ export const Main = (props) => {
     // const  allRoutes= RouteBuilder(props.allItems);
 
     const ctx = CWP.getInstance() as CwpContext;
+
     const mainObserver = {
         observerName: 'cwp_main',
         updateObserver : (sub, data)=> {
@@ -39,7 +40,7 @@ export const Main = (props) => {
                     if(currentApp.appId === routerDetails.appId){                        
                         ctx.ui.closeLoader('cwp_main');               
                         setComp(routerDetails.component);
-                        RemoteComponent = comps[routerDetails.component];
+                        RemoteComponent = components[routerDetails.component];
                     } else {
                         ctx.apps.closeApp(currentApp.appId, user).then(()=>{
                             ctx.apps.openApp(routerDetails.appId, user).then(
@@ -47,7 +48,7 @@ export const Main = (props) => {
                                     ctx.ui.closeLoader('cwp_main');
                                     // need check if current user can access the route
                                     //navigate(routerDetails.route);
-                                    RemoteComponent = comps[routerDetails.component];
+                                    RemoteComponent = components[routerDetails.component];
                                     setComp(routerDetails.component);
                                 }
                             )
@@ -59,7 +60,7 @@ export const Main = (props) => {
                     ctx.apps.openApp(routerDetails.appId, user).then(()=>{
                         // need check if current user can access the route
                         //navigate(routerDetails.route);
-                        RemoteComponent = comps[routerDetails.component];
+                        RemoteComponent = components[routerDetails.component];
                         setComp(routerDetails.component);
                         ctx.ui.closeLoader('cwp_main');
                     });

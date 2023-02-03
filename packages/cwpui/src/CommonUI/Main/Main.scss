@@ -1,4 +1,12 @@
 .main-content {
     background: burlywood;
+    margin: 0;
+    padding: 0;
+    height: calc(100vh - 3rem);
+    position: absolute;
+    top:3rem;
+    width:100%;
+}
+.blank {
     height: calc(100vh - 3rem);
 }

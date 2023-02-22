@@ -1,17 +1,17 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { CWP } from '../../../../cwpcore/src';
-import { APP_NAV_CHANGE_SUBJECT, CwpContext, CwpEventDetail, IAppData, UISize } from '../../../../cwpinterface/src';
+import { APP_NAV_CHANGE_SUBJECT, CwpContext, CwpEventDetail, IAppData, IFeature, IVersion, UISize } from '../../../../cwpinterface/src';
 import { IObserver } from '../../../../cwpinterface/src/events/IObserver';
 import { Blank } from './Blank';
 // import { BrowserRouter, useNavigate, Routes, Route } from "react-router-dom";
 import "./Main.scss";
 
 
-const comp1 = React.lazy(() =>import('@hce/siteop/Panda') );
-const comp2 = React.lazy(() =>import('@hce/siteop/Picking') );
-const comp3 = React.lazy(() =>import('@hce/siteop/Shipping') );
-           
-let components ={'Panda': comp1, 'Picking': comp2, 'Shipping': comp3};
+const comp1 = lazy(() =>import('@hce/siteop/Panda') );
+const comp2 = lazy(() =>import('@hce/siteop/Picking') );
+const comp3 = lazy(() =>import('@hce/siteop/Shipping') );
+const comp4 = lazy(() =>import('@hce/siteop/Outbound'));           
+let components ={'Panda': comp1, 'Picking': comp2, 'Shipping': comp3, 'Outbound': comp4};
 
 
 let RemoteComponent  = Blank;
@@ -28,22 +28,24 @@ export const Main = (props) => {
     const mainObserver = {
         observerName: 'cwp_main',
         updateObserver : (sub, data)=> {
+            console.log(sub);
+            console.log(data);
             ctx.ui.renderLoader({
                 size: UISize.medium,
                 triggerId: 'cwp_main',
                 open: true,
             });
             const routerDetails = data.details;
-            const currentApp = ctx.apps.currentApp() as IAppData;
+            const currentFeature = ctx.apps.currentFeature() as IFeature;
             ctx.user.getCurrentUserAsync().then((user)=>{
-                if(currentApp.appId) { // has current app.  check if route in same app or to different app
-                    if(currentApp.appId === routerDetails.appId){                        
+                if(currentFeature) { // has current feature.  check if route in same app or to different app
+                    if(comp === routerDetails.feature){                        
                         ctx.ui.closeLoader('cwp_main');               
                         setComp(routerDetails.component);
                         RemoteComponent = components[routerDetails.component];
                     } else {
-                        ctx.apps.closeApp(currentApp.appId, user).then(()=>{
-                            ctx.apps.openApp(routerDetails.appId, user).then(
+                        ctx.apps.closeFeature(comp, user).then(()=>{
+                            ctx.apps.openFeature(routerDetails.featureId, user).then(
                                 ()=>{
                                     ctx.ui.closeLoader('cwp_main');
                                     // need check if current user can access the route
@@ -51,19 +53,25 @@ export const Main = (props) => {
                                     RemoteComponent = components[routerDetails.component];
                                     setComp(routerDetails.component);
                                 }
-                            )
+                            ).catch((reason)=>{
+                                console.log(`cannot open because ${reason}`)
+                                ctx.ui.closeLoader('cwp_main');  
+                            });
                          }
-                        )
+                        ).catch((reason)=> {
+                            console.log(`cannot close because ${reason}`)
+                            ctx.ui.closeLoader('cwp_main');  
+                        })
                     }
     
                 } else { // no current app,  safe to redirect if the route is in routing table
-                    ctx.apps.openApp(routerDetails.appId, user).then(()=>{
+                    ctx.apps.openFeature(routerDetails.feature, "main", user).then(()=>{
                         // need check if current user can access the route
                         //navigate(routerDetails.route);
                         RemoteComponent = components[routerDetails.component];
                         setComp(routerDetails.component);
                         ctx.ui.closeLoader('cwp_main');
-                    });
+                    }).catch((reason)=> console.log(`cannot open because ${reason}`));
                 }
                 
 

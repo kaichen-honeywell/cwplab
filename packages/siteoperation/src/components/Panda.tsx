@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CWP_NAV_BUTTON_SUBJECT } from '../../../cwpcore/src';
-import { CwpContext, CwpEventDetail, GetSafeCwpContext, LoaderConfig, UISize } from '../../../cwpinterface/src';
+import { CwpEventDetail, GetSafeCwpContext, LoaderConfig, UISize } from '../../../cwpinterface/src';
 import { IObserver } from '../../../cwpinterface/src/events/IObserver';
 import './components.scss';
 
@@ -45,3 +45,4 @@ const Panda = (props)=>{
 }
 
 export default Panda;
+

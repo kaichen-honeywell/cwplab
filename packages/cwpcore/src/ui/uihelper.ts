@@ -1,16 +1,72 @@
-import { AnnounceConfig, CwpContext, CwpUIService, CWP_ANNOUNCEMENT_SUBJECT, CWP_LOADER_SUBJECT, CWP_MESSAGE_SUBJECT, CWP_MODAL_SUBJECT, LoaderConfig, ModalConfig, ModalObject, ToastMessageConfig } from "../../../cwpinterface/src/index";
+import { AnnounceConfig, CwpContext, CwpUIService, CWP_ANNOUNCEMENT_SUBJECT, CWP_LOADER_SUBJECT, CWP_MESSAGE_SUBJECT, CWP_MODAL_SUBJECT, LoaderConfig, ModalConfig, ModalObject, ToastMessageConfig, UILock } from "../../../cwpinterface/src/index";
 import { CWP } from "../context/context";
 
+export class UILockImpl implements UILock {
+    static _lockObj: string;
+    _lockFunc: ()=>boolean;
+    _acceptFunc: ()=>void;
+
+    constructor(){
+        UILockImpl._lockObj = "";
+        this._lockFunc = ()=> true;
+        this._acceptFunc = ()=>{console.debug('Empty accept')};
+    }
+
+    request(triggerId: string, canUnlock: () => boolean, accept: () => void) {
+       if(!UILockImpl._lockObj){
+        UILockImpl._lockObj = triggerId;
+           this._lockFunc = canUnlock;
+           this._acceptFunc = accept;
+       }
+    }
+    release(triggerId: string): void {
+        if( UILockImpl._lockObj === triggerId) {
+            UILockImpl._lockObj = "";
+            this._lockFunc = ()=>true;
+            this._acceptFunc = ()=>{console.debug('Empty accept')};
+        } else if(!UILockImpl._lockObj){
+            this._lockFunc = ()=>true;
+            this._acceptFunc = ()=>{console.debug('Empty accept')};    
+        } else {
+            throw new Error('');
+        }
+    }
+    unlock(triggerId: string): boolean {
+        if(!UILockImpl._lockObj) { // no lock,  free to go.
+            return true;
+        }
+        if(UILockImpl._lockObj===triggerId ){
+            if (this._lockFunc()) { // meet the condition to unlock, release the lock
+                this.release(triggerId);
+                return true;
+            } else {
+               return false;
+            }
+        }else{
+           return false; // current trigger does not own lock.
+        }
+    }
+    accept(triggerId: string): void {
+       if(UILockImpl._lockObj===triggerId){
+            this._acceptFunc();
+       }else{
+           throw new Error('');
+       }
+    }
+
+}
 export class  UIHelper implements CwpUIService {
     _loaders: Record<string, boolean>;
     _messages: Record<string, boolean>;
     _modals: Record<string, boolean>;
     _announcement: Record<string, boolean>
+    lock: UILock;
     constructor() {
         this._loaders = {};
         this._messages = {};
         this._modals = {};
         this._announcement = {};
+        this.lock = new UILockImpl();
     }
 
     public renderToastMessage(msg: string, toastMessageConfig: ToastMessageConfig) : void {
@@ -167,4 +223,5 @@ export class  UIHelper implements CwpUIService {
         }
     }
 
+    
 }

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { CWP, CWP_NAV_BUTTON_SUBJECT } from "../../../cwpcore/src";
-import { APP_NAV_CHANGE_SUBJECT, CwpContext, CwpEventDetail, IAppData, IAppRoute } from "../../../cwpinterface/src";
+import { APP_NAV_CHANGE_SUBJECT, CwpContext, CwpEventDetail, INavItem, INavTemplate } from "../../../cwpinterface/src";
 import { IObserver } from "../../../cwpinterface/src/events/IObserver";
 import { hamburgerButtonSubject } from "../SubjectConstant";
 import "./Nav.scss";
 
 export interface NavProps {
-    items: IAppData[],
+    navTemplate: INavTemplate;
 }
 
 const Nav = (props: NavProps)=> {
@@ -25,19 +25,23 @@ const Nav = (props: NavProps)=> {
         } as CwpEventDetail)
     }
 
-    const clickNav = (evt:any, item: IAppData, route: IAppRoute) => {
+    const clickNav = (evt:any, item: INavItem) => {
         evt.preventDefault();
         evt.stopPropagation();
-        ctx.events.publishEvent( {
-           subjectName: APP_NAV_CHANGE_SUBJECT,
-           details: {
-            elementId: 'nav_toggle_button',
-            source: 'cwp_nav',
-            route: route.rootUrl,
-            component: route.component,
-            appId: item.appId,
-           }
-        } )
+
+        const nav_evt=  {
+            subjectName: APP_NAV_CHANGE_SUBJECT,
+            details: {
+             elementId: 'nav_toggle_button',
+             source: 'cwp_nav',
+             route: item.url,
+             component: item.component,
+             feature: item.feature.featureId,
+             version: item.version.versionId,
+            }
+         } ;
+        console.log(nav_evt);
+        ctx.events.publishEvent(nav_evt);
         toggle();
     }
 
@@ -54,7 +58,7 @@ const Nav = (props: NavProps)=> {
         return ()=>{
            ctx.events.unsubscribe(hamburgerButtonSubject,navObserver, true);
         };
-    },[props.items])
+    },[props.navTemplate])
 
     return (
     <div className="nav_container">
@@ -62,14 +66,14 @@ const Nav = (props: NavProps)=> {
         <button key={'nav_toggle_button'} onClick={toggle}>x</button>
         <ul>
         {
-         props.items?.map((item)=>
+         props.navTemplate?.navGroups.map((item)=>
          <>
-         <li className="navitem" key={item.appId}>
+         <li className="navitem" key={item.groupId}>
                  <h3> {item.defaultName} </h3>
-             </li><li key={`${item.appId}--child`}>
+             </li><li key={`${item.groupId}--child`}>
                      <ul>
-                         {item.appRoutes?.map((route) =><li key={route.appRouteId}>
-                             <a href={route.rootUrl} onClick={(e)=>clickNav(e, item, route)}>{route.defaultName}</a></li> )}
+                         {item.items.map((route) =><li key={route.navItemId}>
+                             <a href={route.url} onClick={(e)=>clickNav(e, route)}>{route.defaultText}</a></li> )}
                      </ul>
                  </li>
                  </>

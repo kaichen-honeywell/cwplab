@@ -20,8 +20,8 @@ class App extends React.Component {
   
   async componentDidMount() {
      const user = await this.ctx.user.getCurrentUserAsync();
-     const navItems = await this.ctx.apps.listAllApps(user);
-     this.setState({navItems: navItems, user: user });
+     const navTemplate = await this.ctx.apps.getNavTemplate(user);
+     this.setState({navTemplate: navTemplate, user: user });
      this.ctx.ui.renderAnnouncement("HELLO WORLD", {
       open: true,
       msgLevel: UILevel.info,
@@ -35,8 +35,8 @@ class App extends React.Component {
     <div className="App">
       <AnnouncementService></AnnouncementService>
       <Header logo={logo}></Header>
-      <Nav items={this.state.navItems} ></Nav>
-      <Main allItems= {this.state.navItems}  user={this.state.user}></Main>
+      <Nav navTemplate={this.state.navTemplate} ></Nav>
+      <Main allItems= {this.state.navTemplate}  user={this.state.user}></Main>
       <ModalService></ModalService>
       <LoaderService></LoaderService>
     </div>)

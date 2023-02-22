@@ -17,4 +17,12 @@ export interface CwpUIService {
   closeLoader: (triggerId: string)=> void;
   renderAnnouncement: (msg: string, announceConfig: AnnounceConfig) => void;
   closeAnnouncement: (triggerId: string)=> void;
+  lock: UILock;
+}
+
+export interface UILock  {
+  request(triggerId: string, canUnlock: ()=>boolean, accept: ()=> void ):void;
+  release(triggerId: string): void;
+  unlock(triggerId: string): boolean;
+  accept(triggerId: string):void;
 }

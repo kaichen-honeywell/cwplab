@@ -6,10 +6,6 @@ import { Translator } from "../i18n/translator";
 import { UIHelper } from "../ui/uihelper";
 import { UserContext } from "../user/usercontext";
 
-declare global {
-    interface Window { CWP: CwpContext; }
-}
-
 export class CWP  implements  CwpContext{
     private static instance: CWP;
     public apps: CwpAppService;
@@ -18,9 +14,9 @@ export class CWP  implements  CwpContext{
     public user: CwpUserService;
     public i18n: CwpTranslateService;
     constructor() {
-        this.apps = new AppCatalog();
         this.events = new EventBus();
         this.ui = new UIHelper();
+        this.apps = new AppCatalog(this.ui);
         this.user = new UserContext();
         this.i18n = new Translator();
         window.CWP  = {

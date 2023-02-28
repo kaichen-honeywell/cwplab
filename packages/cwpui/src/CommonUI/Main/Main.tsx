@@ -28,8 +28,6 @@ export const Main = (props) => {
     const mainObserver = {
         observerName: 'cwp_main',
         updateObserver : (sub, data)=> {
-            console.log(sub);
-            console.log(data);
             ctx.ui.renderLoader({
                 size: UISize.medium,
                 triggerId: 'cwp_main',
@@ -43,6 +41,7 @@ export const Main = (props) => {
                         ctx.ui.closeLoader('cwp_main');               
                         setComp(routerDetails.component);
                         RemoteComponent = components[routerDetails.component];
+                        history.pushState({comp},'');
                     } else {
                         ctx.apps.closeFeature(comp, user).then(()=>{
                             ctx.apps.openFeature(routerDetails.featureId, user).then(
@@ -52,6 +51,7 @@ export const Main = (props) => {
                                     //navigate(routerDetails.route);
                                     RemoteComponent = components[routerDetails.component];
                                     setComp(routerDetails.component);
+                                    history.pushState({comp},'');
                                 }
                             ).catch((reason)=>{
                                 console.log(`cannot open because ${reason}`)
@@ -70,6 +70,7 @@ export const Main = (props) => {
                         //navigate(routerDetails.route);
                         RemoteComponent = components[routerDetails.component];
                         setComp(routerDetails.component);
+                        history.pushState({comp},'');
                         ctx.ui.closeLoader('cwp_main');
                     }).catch((reason)=> console.log(`cannot open because ${reason}`));
                 }
@@ -80,12 +81,21 @@ export const Main = (props) => {
         } 
     } as IObserver<CwpEventDetail>
 
+    const popstateLock = (evt)=> {
+       if(ctx.ui.lock.unlock('Outbound')){
+           ctx.ui.lock.release('Outbound');
+       }else{
+           ctx.ui.lock.accept('Outbound');
+       }
+    }
     useEffect(() => {
         ctx.events.subscribe(APP_NAV_CHANGE_SUBJECT, mainObserver, true);
+        window.addEventListener('popstate', popstateLock);
         return ()=> {
             ctx.events.unsubscribe(APP_NAV_CHANGE_SUBJECT, mainObserver,true);
+            window.removeEventListener('popstate',popstateLock);
         }
-    });
+    },[comp]);
 
     /**
      * 
